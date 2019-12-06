@@ -11,13 +11,13 @@ const fetchMyIP = function(callback) {
       callback(Error(msg), null);
       return;
     }
-    const ip = JSON.parse(body);
-    callback(null, ip.ip);
+    const ip = JSON.parse(body).ip;
+    callback(null, ip);
 
   });
 };
 const fetchCoordsByIP = function(ip, callback) {
-  request('https://ipvigilante.com/8.8.8.8', (error, response, body) => {
+  request(`https://ipvigilante.com/json/${ip}`, (error, response, body) => {
     if (error) {
       return callback(error, null);
 
@@ -50,5 +50,26 @@ const fetchISSFlyOverTimes = function(coords, callback) {
   });
 
 };
+const nextISSTimesForMyLocation = function(callback) {
+  fetchMyIP((error, ip) => {
+    if (error) {
+      return callback(error, null);
+    }
 
-module.exports = { fetchMyIP, fetchCoordsByIP, fetchISSFlyOverTimes };
+    fetchCoordsByIP(ip, (error, loc) => {
+      if (error) {
+        return callback(error, null);
+      }
+
+      fetchISSFlyOverTimes(loc, (error, nextPasses) => {
+        if (error) {
+          return callback(error, null);
+        }
+
+        callback(null, nextPasses);
+      });
+    });
+  });
+};
+
+module.exports = { nextISSTimesForMyLocation };
