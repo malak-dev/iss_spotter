@@ -1,6 +1,5 @@
-
 const request = require('request');
-const fetchMyIP = function(callback) {
+const fetchMyIP = function (callback) {
   request('https://api.ipify.org?format=json', (error, response, body) => {
     if (error) {
       return callback(error, null);
@@ -16,7 +15,7 @@ const fetchMyIP = function(callback) {
 
   });
 };
-const fetchCoordsByIP = function(ip, callback) {
+const fetchCoordsByIP = function (ip, callback) {
   request(`https://ipvigilante.com/json/${ip}`, (error, response, body) => {
     if (error) {
       return callback(error, null);
@@ -33,7 +32,7 @@ const fetchCoordsByIP = function(ip, callback) {
   });
 
 };
-const fetchISSFlyOverTimes = function(coords, callback) {
+const fetchISSFlyOverTimes = function (coords, callback) {
   request(`http://api.open-notify.org/iss-pass.json?lat=${coords.latitude}&lon=${coords.longitude}`, (error, response, body) => {
     if (error) {
       return callback(error, null);
@@ -50,7 +49,7 @@ const fetchISSFlyOverTimes = function(coords, callback) {
   });
 
 };
-const nextISSTimesForMyLocation = function(callback) {
+const nextISSTimesForMyLocation = function (callback) {
   fetchMyIP((error, ip) => {
     if (error) {
       return callback(error, null);
